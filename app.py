@@ -1,6 +1,12 @@
-import platform 
+from flask import Flask
 import psutil 
 
-print("Hello, World!")
-print('The CPU usage is: ', psutil.cpu_percent(4))
-print('RAM memory % used:', psutil.virtual_memory()[2])
+app = Flask(__name__)
+@app.route('/')
+def hello_world():
+    cpu_usage=psutil.cpu_percent(4)
+    ram_usage=psutil.virtual_memory()[2]
+    return "Hello, Docker! Your CPU usage is : " + str(cpu_usage) + "% and RAM usage is : " + str(ram_usage) + "%"
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', debug=True, port=5000)
