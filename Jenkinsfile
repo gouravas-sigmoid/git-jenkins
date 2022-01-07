@@ -33,7 +33,7 @@ node {
          * First, the incremental build number from Jenkins
          * Second, the 'latest' tag.
          * Pushing multiple tags is cheap, as all the layers are reused. */
-        docker.withRegistry('gouravas/jenkins-assignment', registryCredential ) {
+        docker.withRegistry('gouravas/jenkins-assignment', 'dockerhub' ) {
             app.push("${env.BUILD_NUMBER}")
             app.push("v2")
         }
