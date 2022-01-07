@@ -1,28 +1,11 @@
 pipeline {
-	
-  agent any 
-  
-	stages {
-	
-    stage(“build”) {
-		    echo 'building the application'
+  agent { dockerfile true }
+  stages {
+    stage('Docker Build') {
+      agent any
       steps {
-			
+        sh 'docker build -t jenkins/assignment:v2 .'
       }
-		}
-    
-    stage(“test”) {
-		  
-      steps {
-			  echo 'testing the application'
-      }
-		}
-    
-    stage(“deploy”) {
-		  
-      steps {
-			  echo 'deploying the application'
-      }
-		}
-	}
+    }
+  }
 }
