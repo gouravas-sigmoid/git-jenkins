@@ -1,41 +1,52 @@
-node {
-    environment {
-    registry = "gouravas/jenkins-assignment"
+pipeline {
+  environment {
+    registry = "gourvas/jenkins-assignment"
     registryCredential = 'dockerhub'
-    }
-    
-    def app
-
-    stage('Clone repository') {
-        /* Let's make sure we have the repository cloned to our workspace */
-
-        checkout scm
-    }
-
-    stage('Build image') {
-        /* This builds the actual image; synonymous to
-         * docker build on the command line */
-
-        app = docker.build("jenkins-assignment")
-    }
-
-    stage('Test image') {
-        /* Ideally, we would run a test framework against our image.
-         * Just an example */
-
-        app.inside {
-            sh 'echo "Tests passed"'
+    dockerImage = ''
+  }
+  agent any
+  stages {
+    stage('Cloning Git') {
+        steps {
+            script {
+                withCredentials([gitUsernamePassword(credentialsId: 'github', gitToolName: 'git-tool')]) {
+                    echo "Repository is cloned"
+                    sh 'git fetch --all'
+                }    
+            }
         }
     }
-
+    stage('Building Image') {
+        steps{
+            script {
+                echo "Image has been built"
+                dockerImage = docker.build registry + ":$BUILD_NUMBER"
+            }
+        }
+    }
     stage('Push image') {
-        /* Finally, we'll push the image with two tags:
-         * First, the incremental build number from Jenkins
-         * Second, the 'latest' tag.
-         * Pushing multiple tags is cheap, as all the layers are reused. */
-        docker.withRegistry('https://registry.hub.docker.com', 'dockerhub' ) {
-            app.push("${env.BUILD_NUMBER}")
-            app.push("v2")
+        steps {
+            script {
+                withCredentials([string(credentialsId: 'dockerhub_id', variable: 'dockerhub_pwd')]) {
+                    sh "docker login -u gouravas -p ${dockerhub_pwd}"
+                    echo "Logged in to Docker registry"
+                    sh "docker build -t gouravas/jenkins-assignment:v1 ."
+                    sh "docker push gouravas/jenkins-assignment:v1"       
+                }
+            }
         }
     }
+    stage('Docker Logout') {
+      steps{
+        sh "docker logout"
+      }
+    }
+    stage("Removing unwanted Images") {
+        steps {
+            script {
+                sh "docker rmi $registry:$BUILD_NUMBER"
+            }
+        }
+    }
+  }
 }
