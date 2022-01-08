@@ -1,6 +1,6 @@
 pipeline {
   environment {
-    registry = "gourvas/jenkins-assignment"
+    registry = "gouravas/jenkins-assignment"
     registryCredential = 'dockerhub'
     dockerImage = ''
   }
