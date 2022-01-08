@@ -21,7 +21,7 @@ pipeline {
             script {
                 echo "Image has been built"
                 dockerImage = docker.build registry + ":$BUILD_NUMBER"
-              sh "docker run --rm -p 5000:5000 $dockerImage"
+              sh "docker run -p 5000:5000 $dockerImage"
             }
         }
     }
