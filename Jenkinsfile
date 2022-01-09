@@ -12,14 +12,15 @@ pipeline {
       }
     }
     stage('Building Image') {
-    steps{
-      script {
-        // remove the images those are previously built
-        sh "docker image prune --all"
-        //dockerImage = docker.build registry + ":$BUILD_NUMBER"
-        sh "docker build -t gouravas/jenkins-assignment:v1 ."
-        sh "docker run -d --rm -p 5000:5000 gouravas/jenkins-assignment:v1"
-        echo "A New Image has been built"
+      steps{
+        script {
+          // remove the images those are previously built
+          sh "docker image prune --all"
+          //dockerImage = docker.build registry + ":$BUILD_NUMBER"
+          sh "docker build -t gouravas/jenkins-assignment:v1 ."
+          sh "docker run -d --rm -p 5000:5000 gouravas/jenkins-assignment:v1"
+          echo "A New Image has been built"
+        }
       }
     }
     stage('Push image') {
