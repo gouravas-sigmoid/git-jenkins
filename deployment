@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+        stages {
+            stage('Build1'){
+                steps{
+                    dir('app1'){
+                        script{
+                            git 'https://github.com/cloud/simple-spring.git'
+                            sh 'mvn clean install'
+                            app = docker.build("cloud007/simple-spring")
+                            docker.withRegistry( "https://registry.hub.docker.com", "dockerhub" ) {
+                            // dockerImage.push()
+                            app.push("latest")
+                        }
+                    }
+                }
+            }
+        }
+        stage('Orchestrate') {
+            steps{
+                script{
+                    sh 'kubectl apply -f demo.yaml'
+                }
+            }
+        }
+    }
+}
