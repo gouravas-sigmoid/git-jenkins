@@ -10,6 +10,7 @@ pipeline {
                   }    
               }
           }
+      }
       stage('Building Image') {
           steps{
               script {
