@@ -1,5 +1,10 @@
 pipeline {
   agent any
+  environment {
+    registry = "gouravas/jenkins-assignment"
+    registryCredential = 'dockerhub'
+    dockerImage = ''
+  }
   stages {
     stage('Cloning Git') {
       steps {
