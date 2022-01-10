@@ -37,7 +37,7 @@ pipeline {
         }
       }
     }
-    stage('Deploying nginx') {
+    /*stage('Deploying nginx') {
       steps {
         script {
           kubeconfig(credentialsId: 'github-jenkins-ks', serverUrl: '192.168.49.2:8443') {
@@ -45,6 +45,6 @@ pipeline {
             echo "Successfully Created Replicas on Host."
         }
       }
-    }
+    }*/
   }
 }
