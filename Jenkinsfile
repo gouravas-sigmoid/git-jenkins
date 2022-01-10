@@ -41,8 +41,8 @@ pipeline {
       steps {
         script {
           kubeconfig(credentialsId: 'github-jenkins-ks', serverUrl: '192.168.49.2:8443') {
-          sh "kubectl create -f deployment.yaml"
-          echo "Successfully Created Replicas on Host."
+            sh "kubectl create -f deployment.yaml"
+            echo "Successfully Created Replicas on Host."
         }
       }
     }
