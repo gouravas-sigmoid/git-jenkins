@@ -21,7 +21,7 @@ pipeline {
         script {
           sh "docker image prune --all"  // remove the images those are previously built
           sh "docker build -t gouravas/jenkins-assignment:v1 ." // building an image
-          sh "docker run -d --rm -p 5000:5000 gouravas/jenkins-assignment:v1" // running the image
+          sh "docker run -d --rm gouravas/jenkins-assignment:v1" // running the image
           echo "A New Image has been built"
         }
       }
