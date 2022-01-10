@@ -4,7 +4,6 @@ pipeline {
     registry = "gouravas/jenkins-assignment"
     registryCredential = 'dockerhub'
     dockerImage = ''
-    EMAIL_TO = "gouravsaini@sigmoidanalytics.com"
   }
   stages {
     stage('Cloning Git') {
@@ -47,6 +46,7 @@ pipeline {
               echo "Successfully Deployed."
               sh "kubectl get pods"
               sh "kubectl get deployments"
+              emailext body: 'The build has been successfully completed.', subject: 'Build Success', to: 'gouravsaini@sigmoidanalytics.com'
             }
             catch (err) {
               echo "Pods and Deployments are availbale already, listed here."
@@ -57,16 +57,7 @@ pipeline {
         }
       }
     }
-    success {
-      emailext body: 'Check console output at $BUILD_URL to view the results. \n\n ${CHANGES} \n\n -------------------------------------------------- \n${BUILD_LOG, maxLines=100, escapeHtml=false}', 
-        to: "${EMAIL_TO}", 
-        subject: 'Build Success in Jenkins: $PROJECT_NAME - #$BUILD_NUMBER'
-    }
-        
-    failure {
-      emailext body: 'Check console output at $BUILD_URL to view the results. \n\n ${CHANGES} \n\n -------------------------------------------------- \n${BUILD_LOG, maxLines=100, escapeHtml=false}', 
-        to: "${EMAIL_TO}", 
-        subject: 'Build failed in Jenkins: $PROJECT_NAME - #$BUILD_NUMBER'
-    }
   }
 }
+
+
