@@ -59,7 +59,7 @@ pipeline {
     stage('Listing') {
       steps {
         script {
-          
+          echo "DONE"
         }    
       }
     }
