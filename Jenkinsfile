@@ -4,6 +4,7 @@ pipeline {
     registry = "gouravas/jenkins-assignment"
     registryCredential = 'dockerhub'
     dockerImage = ''
+    EMAIL_TO = "gouravsaini@sigmoidanalytics.com"
   }
   stages {
     stage('Cloning Git') {
@@ -21,7 +22,7 @@ pipeline {
         script {
           sh "docker image prune --all"  // remove the images those are previously built
           sh "docker build -t gouravas/jenkins-assignment:v1 ." // building an image
-          sh "docker run -d --rm -p 5000:5000 gouravas/jenkins-assignment:v1" // running the image
+          sh "docker run -d --rm gouravas/jenkins-assignment:v1" // running the image
           echo "A New Image has been built"
         }
       }
@@ -48,7 +49,7 @@ pipeline {
               sh "kubectl get deployments"
             }
             catch (err) {
-              echo "Already Listed"
+              echo "Pods and Deployments are availbale already, listed here."
               sh "kubectl get pods"
               sh "kubectl get deployments"
             }
@@ -56,12 +57,16 @@ pipeline {
         }
       }
     }
-    stage('Listing') {
-      steps {
-        script {
-          
-        }    
-      }
+    success {
+      emailext body: 'Check console output at $BUILD_URL to view the results. \n\n ${CHANGES} \n\n -------------------------------------------------- \n${BUILD_LOG, maxLines=100, escapeHtml=false}', 
+        to: "${EMAIL_TO}", 
+        subject: 'Build Success in Jenkins: $PROJECT_NAME - #$BUILD_NUMBER'
+    }
+        
+    failure {
+      emailext body: 'Check console output at $BUILD_URL to view the results. \n\n ${CHANGES} \n\n -------------------------------------------------- \n${BUILD_LOG, maxLines=100, escapeHtml=false}', 
+        to: "${EMAIL_TO}", 
+        subject: 'Build failed in Jenkins: $PROJECT_NAME - #$BUILD_NUMBER'
     }
   }
 }
