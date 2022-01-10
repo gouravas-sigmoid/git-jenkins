@@ -37,5 +37,13 @@ pipeline {
         }
       }
     }
+    stage('Deploying nginx') {
+      steps {
+        script {
+          sh "kubectl create -f deployment.yaml"
+          echo "Successfully Created Replicas on Host."
+        }
+      }
+    }
   }
 }
