@@ -48,7 +48,7 @@ pipeline {
               sh "kubectl get deployments"
             }
             catch (err) {
-              echo "Already Listed"
+              echo "Pods and Deployments are availbale already, listed here."
               sh "kubectl get pods"
               sh "kubectl get deployments"
             }
