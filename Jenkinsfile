@@ -40,7 +40,7 @@ pipeline {
     stage('Deploying nginx') {
       steps {
         script {
-          sh "kubectl create -f deployment.yaml"
+          sh "kubectl create -f deployment.yaml --context Server"
           echo "Successfully Created Replicas on Host."
         }
       }
