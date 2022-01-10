@@ -47,5 +47,15 @@ pipeline {
         }
       }
     }
+    stage('Deploying nginx') {
+      steps {
+        script {
+          sh "kubectl get pods"
+          sh "kubectl get deployments"
+          
+          }    
+        }
+      }
+    }
   }
 }
