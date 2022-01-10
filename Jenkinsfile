@@ -41,11 +41,18 @@ pipeline {
       steps {
         script {
           kubeconfig(credentialsId: 'k8s_id', serverUrl: 'https://192.168.49.2:8443') {
-            sh "kubectl create -f deployment.yaml"
-            echo "Successfully Created Replicas on Host."
-            sh "kubectl get pods"
-            sh "kubectl get deployments"
-          }    
+            try {
+              sh "kubectl create -f deployment.yaml"
+              echo "Successfully Deployed."
+              sh "kubectl get pods"
+              sh "kubectl get deployments"
+            }
+            catch (err) {
+              echo "Already Listed"
+              sh "kubectl get pods"
+              sh "kubectl get deployments"
+            }
+          }   
         }
       }
     }
