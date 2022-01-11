@@ -21,7 +21,7 @@ pipeline {
         script {
           sh "docker image prune --all"  // remove the images those are previously built
           sh "docker build -t gouravas/jenkins-assignment:v1 ." // building an image
-          sh "docker run -d --rm -p 5000:5000 gouravas/jenkins-assignment:v1" // running the image
+          sh "docker run -d --rm gouravas/jenkins-assignment:v1" // running the image
           echo "A New Image has been built"
         }
       }
@@ -40,10 +40,25 @@ pipeline {
     stage('Deploying nginx') {
       steps {
         script {
-          sh "kubectl create -f deployment.yaml"
-          echo "Successfully Created Replicas on Host."
+          kubeconfig(credentialsId: 'k8s_id', serverUrl: 'https://192.168.49.2:8443') {
+            try {
+              sh "kubectl create -f deployment.yaml"
+              echo "Successfully Deployed."
+              sh "kubectl get pods"
+              sh "kubectl get deployments"
+              emailext body: 'The build has been successfully completed.', subject: 'Build Success', to: 'gouravsaini@sigmoidanalytics.com'
+            }
+            catch (err) {
+              echo "Pods and Deployments are availbale already, listed here."
+              sh "kubectl get pods"
+              sh "kubectl get deployments"
+              emailext body: 'The build has been successfully completed.', subject: 'Build Success', to: 'gouravsaini@sigmoidanalytics.com'
+            }
+          }   
         }
       }
     }
   }
 }
+
+
