@@ -14,5 +14,6 @@ RUN pip3 install -r requirements.txt
 
 # copy the python code to run on container
 COPY app.py .
+
 # run the python command to execute the python code
 CMD ["python" , "app.py"]
