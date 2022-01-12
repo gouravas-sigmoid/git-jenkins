@@ -49,6 +49,7 @@ pipeline {
               emailext body: 'The build has been successfully completed.', subject: 'Build Success', to: 'gouravsaini@sigmoidanalytics.com'
             }
             catch (err) {
+              sh "kubectl apply -f deployment.yaml"
               echo "Pods and Deployments are availbale already, listed here."
               sh "kubectl get pods"
               sh "kubectl get deployments"
@@ -60,5 +61,3 @@ pipeline {
     }
   }
 }
-
-
