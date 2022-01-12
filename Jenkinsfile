@@ -49,6 +49,7 @@ pipeline {
               emailext body: 'The build has been successfully completed.', subject: 'Build Success', to: 'gouravsaini@sigmoidanalytics.com'
             }
             catch (err) {
+              sh "kubectl apply -f deployment.yaml"
               echo "Pods and Deployments are availbale already, listed here."
               sh "kubectl get pods"
               sh "kubectl get deployments"
@@ -57,17 +58,6 @@ pipeline {
           }   
         }
       }
-    }
-    post {    
-         success {  
-             mail bcc: '', body: 'Hi, Your pipeline build has been Failed, please try to build it back.', cc: '', from: '', replyTo: '', subject: 'Build Failure', to: 'gouravsaini@sigmoidanalytics.com' 
-         }  
-         failure {  
-             mail bcc: '', body: "<b>Example</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "ERROR CI: Project name -> ${env.JOB_NAME}", to: "foo@foomail.com";  
-         }  
-         unstable {  
-             echo 'This will run only if the run was marked as unstable'
-         }
     }
   }
 }
