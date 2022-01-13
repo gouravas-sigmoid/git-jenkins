@@ -5,9 +5,6 @@ pipeline {
     registryCredential = 'dockerhub'
     dockerImage = ''
   }
-  options {
-  buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '1', numToKeepStr: '2')
-  }
   stages {
     stage('Cloning Git') {
       steps {
