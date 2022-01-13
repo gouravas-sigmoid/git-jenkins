@@ -3,7 +3,8 @@ FROM python:slim
 # name of developer
 LABEL maintainer=gouravsaini@sigmoidanalytics.com
 
-# to work in the directory.
+
+# This is to work in the directory.
 WORKDIR /usr/local/src
 
 # copy the requirement file to install the required packages. 
