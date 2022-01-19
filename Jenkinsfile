@@ -42,14 +42,13 @@ pipeline {
         script {
           kubeconfig(credentialsId: 'k8s_id', serverUrl: 'https://192.168.49.2:8443') {
             try {
-              sh "kubectl create -f deployment.yaml"
+              sh "kubectl apply -f deployment.yaml"
               echo "Successfully Deployed."
               sh "kubectl get pods"
               sh "kubectl get deployments"
               emailext body: 'The build has been successfully completed.', subject: 'Build Success', to: 'gouravsaini@sigmoidanalytics.com'
             }
             catch (err) {
-              sh "kubectl apply -f deployment.yaml"
               echo "Pods and Deployments are availbale already, listed here."
               sh "kubectl get pods"
               sh "kubectl get deployments"
