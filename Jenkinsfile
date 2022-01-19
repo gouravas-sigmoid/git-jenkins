@@ -47,7 +47,7 @@ pipeline {
               sh "kubectl get pods"
               sh "kubectl get deployments"
               emailext body: 'Hi, you have got the build successful.', subject: 'Success', to: 'gouravsaini@sigmoidanalytics.com'
-	    }
+	          }
             catch (err) {
               echo "Pods and Deployments are availbale already, listed here."
               sh "kubectl get pods"
@@ -58,16 +58,10 @@ pipeline {
         }
       }
     }
-    post {  
-         always {  
-             echo 'This will always run'  
-         }  
-         success {  
-             echo 'This will run only if successful'  
-         }  
-         failure {  
-             mail body: "<b>Example</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", subject             : "ERROR CI: Project name -> ${env.JOB_NAME}", to: "gouravsaini@sigmoidanalytics.com";  
-         }
+    post {
+        always {
+            emailext body: 'A Test EMail', recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: 'Test'
+        }
     }
   }
 }
