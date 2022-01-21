@@ -46,7 +46,7 @@ pipeline {
               echo "Successfully Deployed."
               sh "kubectl get pods"
               sh "kubectl get deployments"
-	    }
+      	    }
             catch (err) {
               echo "Pods and Deployments are availbale already, listed here."
               sh "kubectl get pods"
@@ -56,19 +56,19 @@ pipeline {
         }
       }
     }
-    post {
-      success {
-        emailext body: '''$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:
-            Check console output at $BUILD_URL to view the results.''', 
-            subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!', 
-            to: 'gouravsaini@sigmoidanalytics.com'
-      }
-      failure {
-        emailext body: '''$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:
-            Check console output at $BUILD_URL to view the results.''',
-            subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!',
-            to: 'gouravsaini@sigmoidanalytics.com'
-      }
-   }
- }
+  }
+  post {
+    success {
+      emailext body: '''$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:
+          Check console output at $BUILD_URL to view the results.''', 
+          subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!', 
+          to: 'gouravsaini@sigmoidanalytics.com'
+    }
+    failure {
+      emailext body: '''$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:
+          Check console output at $BUILD_URL to view the results.''',
+          subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!',
+          to: 'gouravsaini@sigmoidanalytics.com'
+    }
+  }
 }
