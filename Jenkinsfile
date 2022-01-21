@@ -70,4 +70,5 @@ pipeline {
             to: 'gouravsaini@sigmoidanalytics.com'
       }
    }
+ }
 }
