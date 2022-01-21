@@ -9,7 +9,7 @@ pipeline {
     stage('Cloning Git') {
       steps {
         script {
-          withCredentials([gitUsernamePassword(credentialsId: 'github', gitToolName: 'Default'), usernamePassword(credentialsId: 'github', passwordVariable: 'GIT_PSWD', usernameVariable: 'GIT_USR_NAME')]) {
+          withCredentials([usernamePassword(credentialsId: 'github-ID', passwordVariable: 'GIT_PSWD', usernameVariable: 'GIT_USR_NAME')]) {
             sh 'git fetch --all'    // git credentials provided using variable
             echo "Repository is Fetched"
           }    
@@ -29,8 +29,8 @@ pipeline {
     stage('Push image') {
       steps {
         script {
-          withCredentials([string(credentialsId: 'dockerhub_id', variable: 'dockerhub_pwd')]) {
-            sh "docker login -u gouravas -p ${dockerhub_pwd}"  //dockerhub credentials provided using variable
+          withCredentials([string(credentialsId: 'dockerhub_key', variable: 'dockerhub_secret_key')]) {
+            sh "docker login -u gouravas -p ${dockerhub_secret_key}"  //dockerhub credentials provided using variable
             echo "Logged in to Docker registry"
             sh "docker push gouravas/jenkins-assignment:v1"       
           }
@@ -46,22 +46,28 @@ pipeline {
               echo "Successfully Deployed."
               sh "kubectl get pods"
               sh "kubectl get deployments"
-              emailext body: 'Hi, you have got the build successful.', subject: 'Success', to: 'gouravsaini@sigmoidanalytics.com'
-	          }
+	    }
             catch (err) {
               echo "Pods and Deployments are availbale already, listed here."
               sh "kubectl get pods"
               sh "kubectl get deployments"
-              emailext body: 'The build has been successfully completed.', subject: 'Build Success', to: 'gouravsaini@sigmoidanalytics.com'
             }
           }   
         }
       }
     }
     post {
-        always {
-            emailext body: 'A Test EMail', recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: 'Test'
-        }
-    }
-  }
+      success {
+        emailext body: '''$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:
+            Check console output at $BUILD_URL to view the results.''', 
+            subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!', 
+            to: 'gouravsaini@sigmoidanalytics.com'
+      }
+      failure {
+        emailext body: '''$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:
+            Check console output at $BUILD_URL to view the results.''',
+            subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!',
+            to: 'gouravsaini@sigmoidanalytics.com'
+      }
+   }
 }
